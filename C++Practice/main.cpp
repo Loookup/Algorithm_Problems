@@ -1,49 +1,79 @@
-#include "Person.h"
+#include <iostream>
 
-auto make_person(){
-    std::string name; size_t age; size_t salary;
-    std::cin >> name; std::cin >> age; std::cin >> salary;
-    return std::pair(Person{name, age}, salary);
-}
+#include <vector>
+
+#include <string>
+
+using namespace std;
+
+
+
+struct Student {
+
+    Student(string name, float gpa) : name{name}, gpa{gpa} {}
+
+    string name;
+
+    float gpa;
+
+};
+
+//Student* getStudent();
+
+
+
+shared_ptr<Student> getStudent();
+
+void print(const vector<shared_ptr<Student>>& students);
+
+float getAverage(const vector<shared_ptr<Student>> &students, int no);
+
+void plusGPA(const vector<shared_ptr<Student>>& students, float bonus);
+
+
 
 int main() {
-    std::map<Person, size_t>  payroll;
-    int N;
-    std::cin >> N;
-    for (int i=0; i < N; i++)
-        payroll.insert(make_person());
 
-    std::cout << "Sort By ID" << std::endl;
-    for (const auto& [person, salary] : payroll)
-        std::cout << person << " " << salary << std::endl;
+    cout << "Enter the # of students: ";
 
-    std::vector<std::pair<Person, size_t>> v_payroll(std::begin(payroll), std::end(payroll));
+    int no;
 
-    std::cout << "Sort By Age" << std::endl;
-    std::sort(std::begin(v_payroll), std::end(v_payroll),
-              [](const auto& lhs, const auto& rhs) {
-                  auto Comparator = Person::ComparatorByAge();
-                  return Comparator(lhs.first, rhs.first);
-              });
-    for(const auto& [person, salary] : v_payroll)
-        std::cout << person<< " " << salary << std::endl;
+    cin >> no;
 
-    std::cout << "Sort By Name" << std::endl;
-    std::sort(std::begin(v_payroll), std::end(v_payroll),
-              [](const auto& lhs, const auto& rhs) {
-                  auto Comparator = Person::ComparatorByName();
-                  return Comparator(lhs.first, rhs.first);
-              });
-    for(const auto& [person, salary] : v_payroll)
-        std::cout << person<< " " << salary << std::endl;
 
-    std::cout << "Sort By Salary" << std::endl;
-    std::sort(std::begin(v_payroll), std::end(v_payroll),
-              [](const auto& lhs, const auto& rhs){
-                  return lhs.second < rhs.second;
-              });
-    for(const auto& [person, salary] : v_payroll)
-        std::cout << person<< " " << salary << std::endl;
+
+    vector<shared_ptr<Student>> students;
+
+
+
+    for (int i = 0; i < no; i++) {
+
+        auto student = getStudent();
+
+        students.emplace_back(student);
+
+    }
+
+    print(students);
+
+    float average = getAverage(students, no);
+
+    cout << "GPA Average: " << average << endl;
+
+
+
+    plusGPA(students, 1);
+
+
+
+    print(students);
+
+    average = getAverage(students, no);
+
+    cout << "GPA Average: " << average << endl;
+
+
 
     return 0;
+
 }
